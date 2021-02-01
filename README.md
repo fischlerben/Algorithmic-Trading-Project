@@ -1,14 +1,19 @@
 # Algorithmic Trading with the Fama-French Three and Five-Factor Models
 ![Algo](https://cdn.corporatefinanceinstitute.com/assets/fama-french-three-factor-model02.png)
 
-This project set out to examine the Fama-French Three and Five-Factor Models in order to determine which model resulted in the greatest profit.
+This project set out to examine the Fama-French Three and Five-Factor Models in order to determine which model resulted in the greatest profit.  First, a brief background on the Fama-French model (information obtained from https://www.investopedia.com/terms/f/famaandfrenchthreefactormodel.asp): 
 
-MORE
+The first model, the Three-Factor Model, is an asset pricing model developed in 1992 by Nobel laureates Eugene Fame and Kenneth French.  It expands on the capital asset pricing model (CAPM) by adding size, risk and value factors to the already established market-risk factor in CAPM.  According to the Investopedia article mentioned above, "this model considers the fact that value and small-cap stocks outperform markets on a regular basis.  By including these two additional factors, the model adjusts for this outperforming tendency, which is thought to make it a better tool for evaluating manager performance."  The three factors are: SMB (Small Minus Big returns), HML (High Minus Low returns) and the portfolio's return minus the risk free rate of return.  
+
+In 2014, the duo expanded their model to a 5-Factor Model, adding RMB (Robust Minus Weak returns), a profitability factor, and CMA (Conservative Minus Aggressive returns), an investment factor.  In theory, these 2 additional factors should have a beneficial impact on being able to make predictions.  Yet, as we will see, there are interesting results when comparing the 3-Factor and 5-Factor returns.
+
+The respective factors for each model were used as features in a Machine Learning model, predictions were generated, and results were evaluated to determine which model, the 3-Factor or the 5-Factor model, was more effective on which to base trading signals.  The following ReadMe will depict the results of ATT's stock for the sake of brevity.  To see full results of $DIS and $SPY as well, please see "Screenshots" folder.
 
 Team members include Ben Fischler, Zachary Green, Priya Roy, Frank Xu and Emmanuel Henao.
 
 ---
 
+## Pre-Processing:
 ## Fama-French Three-Factor Model:
 In order to more seamlessly progress through the project, we defined various functions that would allow the team to easily read in a CSV and return a cleaned DataFrame:
 
@@ -184,7 +189,7 @@ This allowed us to generate the following evaluation dataframe by feeding in the
 ANOVA tables were generated utilizing statsmodels' Ordinary Least Squares (OLS) model, a model analogous to Linear Regressions.  The following is the ANOVA table generated for ATT's 3-Factor results:
 ![att_3_factor_OLS](/Screenshots/att_3_factor_OLS.png?raw=true)
 
-Few of the important numbers we'd like to point out: the first is r-squared.  The way to read this is that 43.6% of the variation in y, which was excess return on the market, is explained by the factors.  As there were only 3 factors, we expected to see that the 5 factor fama French model might yield better results.  
+Few of the important numbers we'd like to point out: the first is R^2^.  The way to read this is that 43.6% of the variation in y, which was excess return on the market, is explained by the factors.  As there were only 3 factors, we expected to see that the 5 factor fama French model might yield better results.  
 
 The prob (f-statistic) depicts probability of the null hypothesis being true, and  can be thought of as the p-value for the regression as a whole.  Our f-statistic of near-0 implies that overall, the regressions were meaningful.   
 
@@ -194,7 +199,7 @@ Seaborn Pair Plots were also generated for each stock.  This plot shows the affe
 ![att_3_factor_plot](/Screenshots/att_3_factor_plot.png?raw=true)
 With Mkt-Rf on the X-axis, we see that as it goes up so do returns, which makes sense, as it had the highest coeffiecient.  The other two variables had slight effects on the dependent variable.
 
-![att_results_plot](/Screenshots/att_results_plot.png?raw=true)
+![att_3_factor_plot_two](/Screenshots/att_3_factor_plot_two.png?raw=true)
       
 The above plot was generated for each stock analyzed: ATT, DIS and SPY, this one being for ATT.  It is a visual representation of the 3-factor algorithm's cumulative returns vs. the underlying, aka buy-and-hold, return.  We see in the above plot that for ATT, our backtested strategy signficantly outperformed a simple buy-and-hold strategy; while our backtested strategy had positive returns, if you were to buy-and-hold, you would have lost money.    
       
@@ -209,15 +214,21 @@ This is where our custom functions came in handy: we used our pre-defined functi
 Just like for the Three-Factor Model, ANOVA tables were generated utilizing statsmodels' Ordinary Least Squares (OLS) model, a model analogous to Linear Regressions.  The following is the ANOVA table generated for ATT's 5-Factor results:
 ![att_5_factor_OLS](/Screenshots/att_5_factor_OLS.png?raw=true)
 
-R-squared increased only slightly, from 43.6% to 46.4%, and the f-statistic was already near-0 with 3 factor.  In terms of coefficients and individual p-values, Mkt-Rf remained the most influential variable, while the one of the new variables, RMW, was the 2nd most influential.  Again, we saw multicollinearity among the X-variables.  Overall, adding these 2 additional factors did not have a significant impact on the model.
+R^2^ increased only slightly, from 43.6% to 46.4%, and the f-statistic was already near-0 with 3 factor.  In terms of coefficients and individual p-values, Mkt-Rf remained the most influential variable, while the one of the new variables, RMW, was the 2nd most influential.  Again, we saw multicollinearity among the X-variables.  Overall, adding these 2 additional factors did not have a significant impact on the model.
 
 ![att_5_factor_plot](/Screenshots/att_5_factor_plot.png?raw=true)
 Similar to the Three-Factor model, we see that Mkt-Rf is the most influential stock in either direction, positive or negative.  With more factors added, these charts were less steep than when there are only 3 factors because with more relevant factors added, each one now inherently has less of an effect on returns.
 
-![att_5_results](/Screenshots/att_5_results.png?raw=true)
+![att_5_factor_plot_two](/Screenshots/att_5_factor_plot_two.png?raw=true)
       
 We see in the above plot that for ATT, our backtested strategy signficantly outperformed a simple buy-and-hold strategy; while our backtested strategy had positive returns, if you were to buy-and-hold, you would have lost money.  Interestingly, total cumulative returns for the Five-Factor Model were less than those of the Three-Factor Model.  
       
 ---
 
-## Implications/Conclusions:
+## Full Results/Implications/Conclusions:
+### For ANOVA tables/graphs of $DIS and $SPY, please see "Screenshots" folder
+$T: 45.7% R^2^ for 3-factor, 47.3% R^2^ for 5-factor; .0978 Cumulative Return for 3-factor, .0688 Cumulative Return for 5-factor  
+$DIS: 51.2% R^2^ for 3-factor, 52.2% R^2^ for 5-factor; -.416 Cumulative Return for 3-factor, -.3166 Cumulative Return for 5-factor  
+$SPY: 99.3% R^2^ for 3-factor, 99.3% R^2^ for 5-factor; .5308 Cumulative Return for 3-factor, .4516 Cumulative Return for 5-factor  
+
+As the above shows, the 5-factor model did not always improve the model / increase our hypothetical, backtested returns.  In terms of R^2^, the 5-factor model only *slightly* improved the values for ATT and Disney, and for SPY, it did not improve as it was already at 99.3%.  In terms of 
